@@ -1,0 +1,100 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */options{  static = true;}PARSER_BEGIN(MyParser)package p1;
+
+import java.io.*;
+import java.net.*;
+import java.util.*;
+
+public class MyParser{
+  // URL donde obtener empresas y cotizaciones "actuales"
+	private final static String URL = "http://www.infobolsa.es/acciones/ibex35";
+    public static void main(String args []) throws ParseException  {    try {
+      	URL url = new URL(URL);
+      	URLConnection urlConnection = url.openConnection();
+      	BufferedReader buffer = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+		// Entrada de datos de la web
+		//InputStreamReader stream = new InputStreamReader(url);
+		MyParser parser = new MyParser(buffer);
+		Hashtable<String, Double> tablaCotizaciones = MyParser.leeTablaCotizaciones();
+	      
+	    System.out.print("\n\nIntroduzca el nombre de una empresa del IBEX 35: ");
+	    Scanner scanner = new Scanner(System.in);
+	    String empresa = scanner.nextLine(); 
+	    double valorActual = tablaCotizaciones.get(empresa);
+	    System.out.println("Cotización actual: " + valorActual);
+    }catch(Exception e) {
+		System.out.println("Exception " + e.getMessage());
+    }  }}PARSER_END(MyParser)SKIP :
+{
+  " "
+| "\r"
+| "\t"
+| "\n"
+}
+
+TOKEN : /* OPERATORS */
+{
+  < CABECERA : "<!DOCTYPE html>" >
+	| < HTML : "<html>" >
+	| < HTML_FIN : "</html>" >
+	| < HEAD : "<head>" >
+	| < HEAD_FIN : "</head>" >
+	| < BODY : "<body>" >
+	| < BODY_FIN : "</body>" >
+	| < NOMBRE_EMPRESA :  "<td class=\"name\">" >
+	| < COTIZACION_EMPRESA : "<td class=\"price flop\">" >
+	| < A_HREF : "<a href=\"/cotizacion/" > //Se deberia poner el nombre de la empresa
+											//introducida por el usuario
+	| < A_FIN : "</a>" >
+	| < ETIQUETA : "<" >
+	| < ETIQUETA_FIN : ">" >
+	| < BARRA : "/" >
+	| < NUMERO: (["0"-"9"])+(","["0"-"9"])+ >
+	| < CARACTERES :([ "A"-"Z", "a"-"z", "‡", "Ž", "’", "—", "œ", "–", "ç",
+	"ƒ", "ê","î", "ò", "„", "Ÿ", "†", "0"-"9", ".", "Á", "!", "À", "?", ":", ";", ",",
+	"'","¼", "=", "\"", "-", "_", "+", "*", "(", ")", "\\", "@", "%", "#", "&",
+	"[", "]","|", "{", "}", "$" ])+ >
+
+}
+
+Hashtable<String, Double> leeTablaCotizaciones() : {
+  Hashtable<String, Double> tablaLectura = new Hashtable<String, Double> (); } {
+    <CABECERA> <HTML> <HEAD> saltar() <HEAD_FIN> tablaLectura = body() <HTML_FIN> {
+      return tablaLectura; }
+    }
+
+void saltar() : {} {
+  (<CARACTERES> | <ETIQUETA> | <ETIQUETA_FIN> | <BARRA> | <NUMERO>)+
+}
+
+Hashtable<String, Double> body() : {
+  Hashtable<String, Double> tablaBody = new Hashtable<String, Double> ();
+} {
+  <BODY> saltar()  tablaBody = cotizaciones()  <BODY_FIN> {
+    return tablaBody; }
+  }
+
+Hashtable<String, Double> cotizaciones(): {
+  Hashtable<String, Double> tablaC= new Hashtable<String, Double> ();
+  String nombre = " ";
+  String cotizacion;
+  
+} {
+  <NOMBRE_EMPRESA><A_HREF><CARACTERES><ETIQUETA_FIN> nombre=cadena() <A_FIN> saltar() <COTIZACION_EMPRESA> cotizacion=number() {
+    return tablaC; }
+  }
+
+String number() :
+{Token t ;}
+{
+  t= < NUMERO >
+  { return t.image; }
+}
+
+String cadena() :
+{ Token s ;}
+{
+  s= < CARACTERES >
+  { return s.image; }
+}
