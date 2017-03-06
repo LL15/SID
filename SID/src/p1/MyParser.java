@@ -15,16 +15,25 @@ public class MyParser implements MyParserConstants {
         URL url = new URL(URL);
         URLConnection urlConnection = url.openConnection();
         BufferedReader buffer = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+        //String cadena;
+                //String fichero = "C:\\Users\\Daniel\\Documents\\Sistemas de informacion distribuidos\\pagina.html";
+                //FileReader f = new FileReader(fichero);
+                //BufferedReader buffer = new BufferedReader(f);
+                //while((cadena = buffer.readLine())!=null) {
+            //System.out.println(cadena);
+        //}
+        //buffer.close();
                 // Entrada de datos de la web
                 //InputStreamReader stream = new InputStreamReader(url);
                 MyParser parser = new MyParser(buffer);
-                Hashtable<String, Double> tablaCotizaciones = MyParser.leeTablaCotizaciones();
+                System.out.println(parser.leeTablaCotizaciones());
+                //Hashtable<String, Double> tablaCotizaciones = parser.leeTablaCotizaciones();
 
             System.out.print("\u005cn\u005cnIntroduzca el nombre de una empresa del IBEX 35: ");
-            Scanner scanner = new Scanner(System.in);
-            String empresa = scanner.nextLine();
-            double valorActual = tablaCotizaciones.get(empresa);
-            System.out.println("Cotizaci\u00f3n actual: " + valorActual);
+            //Scanner scanner = new Scanner(System.in);
+            //String empresa = scanner.nextLine(); 
+            //double valorActual = tablaCotizaciones.get(empresa);
+            //System.out.println("Cotización actual: " + valorActual);
     }catch(Exception e) {
                 System.out.println("Exception " + e.getMessage());
     }
@@ -50,8 +59,17 @@ public class MyParser implements MyParserConstants {
       case CARACTERES:
         jj_consume_token(CARACTERES);
         break;
+      case META:
+        jj_consume_token(META);
+        break;
+      case TITLE:
+        jj_consume_token(TITLE);
+        break;
       case ETIQUETA:
         jj_consume_token(ETIQUETA);
+        break;
+      case A_FIN:
+        jj_consume_token(A_FIN);
         break;
       case ETIQUETA_FIN:
         jj_consume_token(ETIQUETA_FIN);
@@ -68,6 +86,9 @@ public class MyParser implements MyParserConstants {
         throw new ParseException();
       }
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case META:
+      case TITLE:
+      case A_FIN:
       case ETIQUETA:
       case ETIQUETA_FIN:
       case BARRA:
@@ -96,7 +117,11 @@ public class MyParser implements MyParserConstants {
   Hashtable<String, Double> tablaC= new Hashtable<String, Double> ();
   String nombre = " ";
   String cotizacion;
+  System.out.println("cotizaciones()");
+    jj_consume_token(INICIO_TABLA);
+                  System.out.println("1");
     jj_consume_token(NOMBRE_EMPRESA);
+                                                             System.out.println("2");
     jj_consume_token(A_HREF);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -118,6 +143,7 @@ public class MyParser implements MyParserConstants {
 
   static final public String cadena() throws ParseException {
   Token s ;
+System.out.println("cadena()");
     s = jj_consume_token(CARACTERES);
     {if (true) return s.image;}
     throw new Error("Missing return statement in function");
@@ -139,7 +165,7 @@ public class MyParser implements MyParserConstants {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x1f0000,0x1f0000,};
+      jj_la1_0 = new int[] {0xfc0c00,0xfc0c00,};
    }
 
   /** Constructor with InputStream. */
@@ -277,7 +303,7 @@ public class MyParser implements MyParserConstants {
   /** Generate ParseException. */
   static public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[21];
+    boolean[] la1tokens = new boolean[24];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -291,7 +317,7 @@ public class MyParser implements MyParserConstants {
         }
       }
     }
-    for (int i = 0; i < 21; i++) {
+    for (int i = 0; i < 24; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;
