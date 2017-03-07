@@ -1,16 +1,56 @@
 package p2;
 
+import java.util.ArrayList;
+
+import org.apache.jena.query.*;
 import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QueryFactory;
-import org.apache.jena.query.ResultSet;
+
+import twitter4j.*;
+import twitter4j.auth.AccessToken;
+import twitter4j.auth.RequestToken;
+import twitter4j.conf.ConfigurationBuilder;
 
 public class P2 {
 
 	public static void main(String[] args){
-		String tendencias[] = {"Neymar", "Lionel", "Michel"};
-		for (String tendencia : tendencias){
+		ArrayList<String> tendenciasTwitter = new ArrayList<String>();
+		try{
+			/*ConfigurationBuilder cb = new ConfigurationBuilder();
+			cb.setDebugEnabled(true)
+			  .setOAuthConsumerKey("w7T5rLBuhMmLYX3GqqrbLakdM")
+			  .setOAuthConsumerSecret("1KEwkRaKClE93oAI1V9V4wbEjK66bzz00IE3a3TJWXRiXeHlpT")
+			  .setOAuthAccessToken("3003195647-KrGj5kH9CIcxelynPGruJpGExLIcNjJ5EHUH5de")
+			  .setOAuthAccessTokenSecret("m3RFQbJ2Va4cp4uENK9uLYwIYVv7fxYtYAhLrTcu4ZmRI");*/
+			//TwitterFactory tf = new TwitterFactory(cb.build());
+			TwitterFactory tf = new TwitterFactory();
+			Twitter twitter = tf.getInstance();
+			
+			//23424950 es el codigo de españa
+			Trends trends = twitter.getPlaceTrends(23424950);
+			//for (int i = 0; i < trends.getTrends().length; i++) {
+			for (int i = 0; i <= 10; i++) {
+				tendenciasTwitter.add(trends.getTrends()[i].getName());
+			    //System.out.println(trends.getTrends()[i].getName());
+			}
+			System.out.println(tendenciasTwitter);
+			System.out.println("---------------------HECHO!---------------------");
+			
+//			ResponseList<Location> locations;
+//			locations = twitter.getAvailableTrends();
+//			System.out.println("Showing available trends");
+//            for (Location location : locations) {
+//                System.out.println(location.getName() + " (woeid:" + location.getWoeid() + ")");
+//            }
+//			System.out.println("done.");
+		} catch(TwitterException te){
+			te.printStackTrace();
+            System.out.println("Failed to get trends: " + te.getMessage());
+            System.exit(-1);
+		}
+		
+		//String tendencias[] = {"Neymar", "Lionel", "Michel"};
+		for (String tendencia : tendenciasTwitter){
+			System.out.println(tendencia);
 			String sparqlEndpoint = "http://dbpedia.org/sparql";
 
 			String sparqlQuery = "PREFIX dbp: <http://dbpedia.org/property/> PREFIX dbo: <http://dbpedia.org/ontology/> "
