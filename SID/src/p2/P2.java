@@ -1,7 +1,5 @@
 package p2;
 
-import java.util.*;
-import org.apache.jena.*;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -11,7 +9,7 @@ import org.apache.jena.query.ResultSet;
 public class P2 {
 
 	public static void main(String[] args){
-		String tendencias[] = {"Neymar", "Lionel Messi", "Ilegales"};
+		String tendencias[] = {"Neymar", "Lionel", "Michel"};
 		for (String tendencia : tendencias){
 			String sparqlEndpoint = "http://dbpedia.org/sparql";
 
