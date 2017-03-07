@@ -57,8 +57,7 @@ TOKEN : /* OPERATORS */
 	| < NOMBRE_EMPRESA :  "<td class=\"name\">" >
 	| < COTIZACION_EMPRESA : "<td class=\"price flop\">" >
 	| < FIN_TBODY : "</tbody>" >
-	| < A_HREF : "<a href=\"/cotizacion/" > //Se deberia poner el nombre de la empresa
-											//introducida por el usuario
+	| < A_HREF : "<a href=\"/cotizacion/" >
 	| < A_FIN : "</a>" >
 	| < TD_FIN : "</td>" >
 	| < ETIQUETA : "<" >
@@ -88,7 +87,7 @@ Hashtable<String, Double> body() : {
   Hashtable<String, Double> tablaBody = new Hashtable<String, Double> ();
 } {
   <BODY> saltar()  { System.out.println("encontrado inicio tabla"); }
-  tablaBody = cotizaciones() <BODY_FIN> {
+  tablaBody = cotizaciones() saltar() <BODY_FIN> {
     return tablaBody; }
   }
 

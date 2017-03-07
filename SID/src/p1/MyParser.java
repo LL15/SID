@@ -114,6 +114,7 @@ public class MyParser implements MyParserConstants {
     saltar();
                      System.out.println("encontrado inicio tabla");
     tablaBody = cotizaciones();
+    saltar();
     jj_consume_token(BODY_FIN);
     {if (true) return tablaBody;}
     throw new Error("Missing return statement in function");
