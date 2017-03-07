@@ -35,19 +35,23 @@ public interface MyParserConstants {
   /** RegularExpression Id. */
   int COTIZACION_EMPRESA = 16;
   /** RegularExpression Id. */
-  int A_HREF = 17;
+  int FIN_TBODY = 17;
   /** RegularExpression Id. */
-  int A_FIN = 18;
+  int A_HREF = 18;
   /** RegularExpression Id. */
-  int ETIQUETA = 19;
+  int A_FIN = 19;
   /** RegularExpression Id. */
-  int ETIQUETA_FIN = 20;
+  int TD_FIN = 20;
   /** RegularExpression Id. */
-  int BARRA = 21;
+  int ETIQUETA = 21;
   /** RegularExpression Id. */
-  int NUMERO = 22;
+  int ETIQUETA_FIN = 22;
   /** RegularExpression Id. */
-  int CARACTERES = 23;
+  int BARRA = 23;
+  /** RegularExpression Id. */
+  int NUMERO = 24;
+  /** RegularExpression Id. */
+  int CARACTERES = 25;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -68,11 +72,13 @@ public interface MyParserConstants {
     "\"<title>\"",
     "\"<body\"",
     "\"</body>\"",
-    "\"<td class=\\\"bookmark favorites\\\">\"",
+    "\"<td class=\\\"bookmark favorites\\\"><a class=\\\"icon-star\\\">\"",
     "\"<td class=\\\"name\\\">\"",
     "\"<td class=\\\"price flop\\\">\"",
+    "\"</tbody>\"",
     "\"<a href=\\\"/cotizacion/\"",
     "\"</a>\"",
+    "\"</td>\"",
     "\"<\"",
     "\">\"",
     "\"/\"",
