@@ -19,9 +19,10 @@ public class P2 {
 					+ "PREFIX dbr: <http://dbpedia.org/resource/>"
 					+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
 					+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
-					+ "SELECT DISTINCT ?uri WHERE {"
-					+ "   ?uri rdf:type dbo:Person ."
-					+ "   ?uri dbp:name '"+tendencia+"'@en .}";
+					+ "SELECT DISTINCT ?uri ?club WHERE {"
+					+ "   ?uri rdf:type dbo:SoccerPlayer ."
+					+ "   ?uri dbp:name '"+tendencia+"'@en ."
+					+ "   ?uri dbp:currentclub ?club .}";
 			Query query = QueryFactory.create(sparqlQuery);
 			QueryExecution exec = QueryExecutionFactory.sparqlService(
 				sparqlEndpoint, query );
