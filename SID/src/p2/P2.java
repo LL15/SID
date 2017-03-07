@@ -15,13 +15,6 @@ public class P2 {
 	public static void main(String[] args){
 		ArrayList<String> tendenciasTwitter = new ArrayList<String>();
 		try{
-			/*ConfigurationBuilder cb = new ConfigurationBuilder();
-			cb.setDebugEnabled(true)
-			  .setOAuthConsumerKey("w7T5rLBuhMmLYX3GqqrbLakdM")
-			  .setOAuthConsumerSecret("1KEwkRaKClE93oAI1V9V4wbEjK66bzz00IE3a3TJWXRiXeHlpT")
-			  .setOAuthAccessToken("3003195647-KrGj5kH9CIcxelynPGruJpGExLIcNjJ5EHUH5de")
-			  .setOAuthAccessTokenSecret("m3RFQbJ2Va4cp4uENK9uLYwIYVv7fxYtYAhLrTcu4ZmRI");*/
-			//TwitterFactory tf = new TwitterFactory(cb.build());
 			TwitterFactory tf = new TwitterFactory();
 			Twitter twitter = tf.getInstance();
 			
