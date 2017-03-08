@@ -1,40 +1,48 @@
 /**
  * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
- */options{  static = true;}PARSER_BEGIN(MyParser)package p1;
+ */
+options
+{
+  static = true;
+}
+
+PARSER_BEGIN(MyParser)
+package p1;
 
 import java.io.*;
 import java.net.*;
 import java.util.*;
 
-public class MyParser{
+public class MyParser
+{
   // URL donde obtener empresas y cotizaciones "actuales"
 	private final static String URL = "http://www.infobolsa.es/acciones/ibex35";
-    public static void main(String args []) throws ParseException  {    try {
+  
+  public static void main(String args []) throws ParseException
+  {
+    try {
       	URL url = new URL(URL);
       	URLConnection urlConnection = url.openConnection();
       	BufferedReader buffer = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-      	//String cadena;
-		//String fichero = "C:\\Users\\Daniel\\Documents\\Sistemas de informacion distribuidos\\pagina.html";
-		//FileReader f = new FileReader(fichero);
-		//BufferedReader buffer = new BufferedReader(f);
-		//while((cadena = buffer.readLine())!=null) {
-            //System.out.println(cadena);
-        //}
-        //buffer.close();
-		// Entrada de datos de la web
-		//InputStreamReader stream = new InputStreamReader(url);
+      	
 		MyParser parser = new MyParser(buffer);
 		System.out.println(parser.leeTablaCotizaciones());
 		//Hashtable<String, Double> tablaCotizaciones = parser.leeTablaCotizaciones();
 	      
 	    System.out.print("\n\nIntroduzca el nombre de una empresa del IBEX 35: ");
-	    //Scanner scanner = new Scanner(System.in);
-	    //String empresa = scanner.nextLine(); 
+	    Scanner scanner = new Scanner(System.in);
+	    String empresa = scanner.nextLine(); 
 	    //double valorActual = tablaCotizaciones.get(empresa);
 	    //System.out.println("Cotización actual: " + valorActual);
     }catch(Exception e) {
 		System.out.println("Exception " + e.getMessage());
-    }  }}PARSER_END(MyParser)SKIP :
+    }
+  }
+}
+
+PARSER_END(MyParser)
+
+SKIP :
 {
   " "
 | "\r"
@@ -49,13 +57,13 @@ TOKEN : /* OPERATORS */
 	| < HTML_FIN : "</html>" >
 	| < HEAD : "<head>" >
 	| < HEAD_FIN : "</head>" >
-	| < META : "<meta" >
-	| < TITLE : "<title>" >
 	| < BODY : "<body" >
 	| < BODY_FIN : "</body>" >
 	| < INICIO_TABLA: "<td class=\"bookmark favorites\"><a class=\"icon-star\">" >
 	| < NOMBRE_EMPRESA :  "<td class=\"name\">" >
 	| < COTIZACION_EMPRESA : "<td class=\"price flop\">" >
+	| < COTIZACION_EMPRESA1 : "<td class=\"price top\">" >
+	| < COTIZACION_EMPRESA2 : "<td class=\"price equal\">" >
 	| < FIN_TBODY : "</tbody>" >
 	| < A_HREF : "<a href=\"/cotizacion/" >
 	| < A_FIN : "</a>" >
@@ -69,7 +77,7 @@ TOKEN : /* OPERATORS */
 	"'","¼", "=", "\"", "-", "_", "+", "*", "(", ")", "\\", "@", "%", "#", "&",
 	"[", "]","|", "{", "}", "$", "€", "á", "é", "í", "ó", "ú", "Á", "É", "Í", "Ó", "Ú",
 	"ñ", "Ñ", "¿", "?", "º", "\u00c3", "\u00ad", "\u00b3", "\u201c", "\ufffd", "\u00e2",
-	"\u201a", "\u00ac", "\u00a1", "\u00b1", "\u00c2", "\u00a9", "\u0161", "<", ">", "\"" ])+ >
+	"\u201a", "\u00ac", "\u00a1", "\u00b1", "\u00c2", "\u00a9", "\u0161" ])+ >
 
 }
 
@@ -80,7 +88,7 @@ Hashtable<String, Double> leeTablaCotizaciones() : {
     }
 
 void saltar() : {System.out.println("saltar()");} {
-  (<CARACTERES> | <META> | <TITLE> | <ETIQUETA> | <A_FIN> | <ETIQUETA_FIN> | <A_HREF> | <BARRA> | <NUMERO>)+
+  (<CARACTERES> | <ETIQUETA> | <A_FIN> | <ETIQUETA_FIN>| <TD_FIN> | <A_HREF> | <BARRA> | <NUMERO>)+
 }
 
 Hashtable<String, Double> body() : {
@@ -93,17 +101,20 @@ Hashtable<String, Double> body() : {
 
 Hashtable<String, Double> cotizaciones(): {
   Hashtable<String, Double> tablaC= new Hashtable<String, Double> ();
-  String nombre = " ";
+  String nombre = "";
+  String n1;
   String cotizacion;
   System.out.println("cotizaciones()");
   
 } {
-   (     <INICIO_TABLA> {System.out.println("1"); }
-     <A_FIN> {System.out.println("y"); }
-      <TD_FIN> <NOMBRE_EMPRESA> {System.out.println("2"); }
-   <A_HREF><CARACTERES><ETIQUETA_FIN> nombre=cadena() {System.out.println(nombre); }
-   <CARACTERES> <A_FIN> {System.out.println("3"); } saltar()
-   <COTIZACION_EMPRESA> cotizacion=number())+ <FIN_TBODY> {
+   (
+     <INICIO_TABLA> <A_FIN> <TD_FIN> <NOMBRE_EMPRESA>
+   <A_HREF> <CARACTERES> <ETIQUETA_FIN> (n1 = cadena()
+  {System.out.println(n1); nombre += " " + n1; })+
+  {System.out.println(nombre); }
+   <A_FIN> <TD_FIN> 
+  {System.out.println(" <A_FIN> <TD_FIN> "); }   (<COTIZACION_EMPRESA>|<COTIZACION_EMPRESA1>|<COTIZACION_EMPRESA2>)? cotizacion=number()
+  {System.out.println(cotizacion); }<TD_FIN> saltar())+ <FIN_TBODY> {
     return tablaC; }
   }
 
